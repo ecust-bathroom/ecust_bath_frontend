@@ -33,7 +33,12 @@
   border-radius: 5px;
   float: right;
 }
-
+.fixing{
+  background-color: gray;
+  color:white;
+  border-radius: 5px;
+  float: right;
+}
 .my-appointed{
   background-color: blue;
   color:white;

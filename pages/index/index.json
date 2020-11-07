@@ -1,5 +1,7 @@
 {
-  "usingComponents": {},
+  "usingComponents": {
+    "modal-input":"../../components/modal-input/modal-input"
+  },
   "enablePullDownRefresh":true,
   "backgroundTextStyle":"dark"
 }
