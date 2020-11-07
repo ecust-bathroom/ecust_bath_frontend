@@ -39,6 +39,7 @@ Page({
       icon: success
     })
     this.getDormStatus();
+    this.getUserStatus();
   },
   login: function (userid, password) {
     wx.request({
@@ -148,6 +149,7 @@ Page({
             title: '预约成功！',
             icon: 'success',
           })
+          this.onPullDownRefresh()
         } else if (res.data['status'] == 'fail') {
           netError()
         }
