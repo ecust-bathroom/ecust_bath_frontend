@@ -1,0 +1,56 @@
+/**index.wxss**/
+.userinfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.userinfo-avatar {
+  width: 128rpx;
+  height: 128rpx;
+  margin: 20rpx;
+  border-radius: 50%;
+}
+
+.userinfo-nickname {
+  color: #aaa;
+}
+
+.usermotto {
+  margin-top: 200px;
+}
+
+.empty{
+  background-color: green;
+  color:white;
+  border-radius: 5px;
+  float: right;
+}
+
+.using{
+  background-color: red;
+  color:white;
+  border-radius: 5px;
+  float: right;
+}
+
+.my-appointed{
+  background-color: blue;
+  color:white;
+  border-radius: 5px;
+  float: right;
+}
+.appointed{
+  background-color: yellow;
+  color:white;
+  border-radius: 5px;
+  float: right;
+}
+.bathroom{
+  padding:30px 20px;
+  margin:5px;
+  border-color: black;
+  border:3rpx solid #0000aa;
+  border-radius:5px
+}
+

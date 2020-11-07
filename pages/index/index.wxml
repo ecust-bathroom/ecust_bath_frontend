@@ -1,0 +1,49 @@
+<!--index.wxml-->
+<view class="container">
+  <view class="topblock">
+    <text>华东理工大学奉贤校区学生浴室预约系统 v1.0</text>
+  </view>
+  <view class="test">
+    <button bindtap="test">模拟登录</button>
+    <button bindtap="appoint_emu">模拟预约</button>
+  </view>
+  <view class="loginblock" wx:if="{{!login}}">
+    <input type="text" placeholder="学号"></input>
+    <input type="text" placeholder="密码"></input>
+    <button bindtap="login">登录</button>
+  </view>
+  <view wx:if="{{login}}">
+    <view class="statusblock">
+      <text>学号：{{userData.userid}} {{userData.userName}}</text>
+      <text>宿舍{{dormData.dormId}}楼</text>
+      <text>{{dormData.now}}/{{dormData.total}}</text>
+    </view>
+    <view class="myappointment">
+      <view wx:if="{{appointed}}">
+        <text>当前预约：{{userData.bathid}}</text>
+        <text>预约时间：{{userData.starttime}} To {{userData.endtime}}</text>
+        <button bindtap="cancel">取消预约</button>
+      </view>
+      <view wx:if="{{!appointed}}">
+        <text>您当前还未预约。</text>
+        <button>预约</button>
+      </view>
+      <view class="bathroomblock">
+        <view class="bathroom" wx:for="{{dormData.bathroom}}" wx:for-item="room" bindtap="appoint">
+          <text>{{room.bathid}}号浴室</text>
+          <text class="using" wx:if="{{room.status=='using'}}">正在使用</text>
+          <text class="empty" wx:if="{{room.status=='empty'}}">可用</text>
+          <text></text>
+          <text class="appointed" wx:if="{{room.status=='appointed'}}">已被预约</text>
+          <text class="my-appointed" wx:if="{{appointed && room.bathid==userData.bathid}}">已预约</text>
+        </view>
+      </view>
+    </view>
+  </view>
+<view>
+  <picker class="time-picker" mode="time" value="{{userData.starttime[0]+':'+userData.starttime[1]}}" bindchange="starttimeChange">ni</picker>
+  <text>{{userData.starttime}}</text>
+  <picker class="time-picker" mode="time" value="{{userData.endtime}}" bindchange="endtimeChange">ni</picker>
+  <text>{{userData.endtime}}</text>
+</view>
+</view>
