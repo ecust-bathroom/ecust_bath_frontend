@@ -17,3 +17,12 @@ const formatNumber = n => {
 module.exports = {
   formatTime: formatTime
 }
+
+
+function wxrequestPromise(url){
+  return new Promise(function(resolve,reject){
+    wx.request({
+      url: 'url',
+    })
+  })
+}

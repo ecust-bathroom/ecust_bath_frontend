@@ -1,33 +1,37 @@
 //index.js
 //获取应用实例
-const app = getApp()
+let app = getApp()
 var util = require('../../utils/util.js')
+//var p = require('../../utils/wx-promise-pro.js')
+//p.promisifyAll()
 Page({
   data: {
     hook: true,
-    appointed: false,
-    openid: NaN,
-    userWxData: {
-      headicon: NaN,
-      telephone: NaN,
-      nickname: NaN
-    },
+    canShow: false,
     userData: {
-      userName: NaN,
-      userid: NaN,
-      dormid: NaN,
-      appointment: {}
+      name: null,
+      userid: null,
+      dormid: null,
+    },
+    appointment: {
+      appointed: null,
+      bathid: null,
+      starttime: null,
+      endtime: null
+    },
+    dormData: {
+      bathroom: null,
+      dormid: null,
+      now: null,
+      total: null
     },
     items: [{
       label: '请输入学号',
       name: 'userid',
     }],
-    dormData: {
-      bathroom: NaN,
-      dormid: NaN,
-      now: NaN,
-      total: NaN
-    },
+    userInfo: {},
+    hasUserInfo: false,
+    canIUse: wx.canIUse('button.open-type.getUserInfo')
   },
   //事件处理函数
   bindViewTap: function () {
@@ -38,54 +42,75 @@ Page({
   onLoad: function () {
     //1.设置picker时间为当前时间
     var mytime = new Date();
-    var time = [mytime.getHours(), mytime.getMinutes()];
+    var time = String(mytime.getHours()) + ":" + String(mytime.getMinutes());
     this.setData({
       bootTime: time
     });
-    //2.获得用户的UnionID并核验
-    wx.login({
-      success: (res) => {
-        if (res.code) {
-          wx.request({
-            url: 'http://127.0.0.1:5000/api/wxlogin/',
-            method: 'POST',
-            data: {
-              'js_code': res.code
-            },
-            method: 'POST',
-            dataType: JSON,
-            header: {
-              'content-type': 'application/json'
-            },
-            success: (res2) => {
-              var data = JSON.parse(res2.data);
-              if (data.status == 'success') {
-                this.setUserStatus(data.userid);
-                this.setDormStatus(data.dormid);
-              } else if (data.status == 'hook') {
-                this.setData({
-                  hook: false,
-                  openid: data.openid
-                })
-              } else if (data.status == 'fail') {
-                this.netError()
-              }
-            },
-          });
-        } else {
-          console.log('登陆失败！' + res.errMsg)
-        }
+    //2.同步全局变量
+    /*
+    if (app.globalData.userid) {
+      this.setUserStatus(app.globalData.userid)
+    } else {
+      app.useridReadyCallback = data => {
+        this.setUserStatus(data.userid)
       }
+    }*/
+    if (app.globalData.userInfo) {
+      this.setData({
+        userInfo: app.globalData.userInfo,
+        hasUserInfo: true
+      })
+    } else if (this.data.canIUse) {
+      // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
+      // 所以此处加入 callback 以防止这种情况
+      app.userInfoReadyCallback = res => {
+        this.setData({
+          userInfo: res.userInfo,
+          hasUserInfo: true
+        })
+      }
+    } else {
+      // 在没有 open-type=getUserInfo 版本的兼容处理
+      wx.getUserInfo({
+        success: res => {
+          app.globalData.userInfo = res.userInfo
+          this.setData({
+            userInfo: res.userInfo,
+            hasUserInfo: true
+          })
+        }
+      })
+    }
+    wx.showLoading({
+      title: '加载中',
+    })
+    setTimeout(() => {
+      this.setUserStatus(app.globalData.userid)
+      setTimeout(() => {
+        this.setDormStatus(this.data.userData.dormid)
+        wx.hideLoading()
+        this.setData({
+          canShow: true
+        })
+      }, 1000)
+    }, 1000) //这里上面让优化的时候再优化
+  },
+  getUserInfo: function (e) {
+    console.log(e)
+    app.globalData.userInfo = e.detail.userInfo
+    this.setData({
+      userInfo: e.detail.userInfo,
+      hasUserInfo: true
     })
   },
   onPullDownRefresh: function () {
-    wx.showToast({
-      title: '刷新成功',
-      icon: success
-    })
-    this.setUserStatus(this.data.userData['userid']);
-    this.setDormStatus(this.data.userData['dormid']);
-
+    setTimeout(() => {
+      this.setUserStatus(this.data.userData.userid);
+      this.setDormStatus(this.data.userData.dormid);
+      wx.showToast({
+        title: '刷新成功',
+      })
+    }, 1000)
   },
   hook: function (e) {
     if (e.detail.confirm) {
@@ -106,7 +131,8 @@ Page({
           'content-type': 'application/json'
         },
         success: (res) => {
-          var data = JSON.parse(res.data)
+          var data = res.data
+          //var data = JSON.parse(res.data)
           if (data.status == 'success') {
             wx.showModal({
               cancelColor: 'cancelColor',
@@ -129,14 +155,13 @@ Page({
       data: {
         'userid': userid
       },
-      method: "POST",
-      dataType: JSON,
+      method: 'POST',
       header: {
-        'content-type': 'application/json'
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success: (res) => {
-        debugger
-        var data = JSON.parse(res.data)
+        var data = res.data
+        //var data = JSON.parse(res.data)
         if (data.status == 'success') {
           console.log('获取用户信息成功！')
           this.setData({
@@ -155,12 +180,12 @@ Page({
         'dormid': dormid
       },
       method: "POST",
-      datatype: JSON,
       header: {
-        'content-type': 'application/json'
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success: (res) => {
-        var data = JSON.parse(res.data)
+        var data = res.data
+        // var data = JSON.parse(res.data)
         if (data.status == 'success') {
           console.log('获取浴室信息成功！')
           this.setData({
@@ -172,34 +197,44 @@ Page({
       },
     })
   },
-  appoint: function (bathid) {
+  appoint: function (event) {
+    wx.showModal({
+      title:'提示',
+      content:'确认预约吗？',
+      cancelColor: 'cancelColor',
+      success: (res) => {
+        if (!res.confirm) {
+          return
+        }
+      }
+    })
     wx.request({
       url: 'http://127.0.0.1:5000/api/appoint/',
       data: {
-        userid: userid,
-        bathid: bathid,
-        starttime: starttime,
-        endtime: endtime
+        userid: this.data.userData.userid,
+        bathid: event.currentTarget.dataset.num,
+        starttime: this.data.appointment.starttime,
+        endtime: this.data.appointment.endtime
       },
       method: "POST",
-      datatype: JSON,
       header: {
-        'content-type': 'application/json'
+        'content-type': 'application/x-www-form-urlencoded'
       },
       success: (res) => {
-        var data = JSON.parse(res.data)
+        var data = res.data
+        //var data = JSON.parse(res.data)
         if (data.status == 'success') {
           this.setData({
+            //todo change
             appointed: true,
-            bathid: bathid,
-            starttime: starttime,
-            endtime: endtime
+            bathid: event.currentTarget.dataset.num,
+            starttime: this.data.appointment.starttime,
+            endtime: this.data.appointment.endtime
           });
-          wx.showToast({
+          wx.showModal({
+            cancelColor: 'cancelColor',
             title: '预约成功！',
-            icon: 'success',
           })
-          this.onPullDownRefresh()
         } else if (data.status == 'fail') {
           this.netError()
         }
@@ -224,13 +259,14 @@ Page({
         'content-type': 'application/json'
       },
       success(res) {
-        var data = JSON.parse(res.data)
+        var data = res.data
+        //        var data = JSON.parse(res.data)
         if (data.status == 'success') {
           this.setData({
             appointed: false,
-            bathid: NaN,
-            starttime: NaN,
-            endtime: NaN
+            bathid: 0,
+            starttime: 0,
+            endtime: 0
           });
           wx.showToast({
             title: '取消成功！',
@@ -249,17 +285,17 @@ Page({
     })
   },
   starttimeChange: function (e) {
-    var d = this.data.userData;
+    var d = this.data.appointment;
     d.starttime = e.detail.value;
     this.setData({
-      userData: d
+      appointment: d
     })
   },
   endtimeChange: function (e) {
-    var d = this.data.userData;
+    var d = this.data.appointment;
     d.endtime = e.detail.value;
     this.setData({
-      userData: d
+      appointment: d
     })
   },
   netError: function () {

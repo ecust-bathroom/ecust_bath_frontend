@@ -1,15 +1,53 @@
 //app.js
+//var p = require('../../utils/wx-promise-pro.js')
+//p.promisifyAll()
 App({
+  globalData: {
+    userInfo: null,
+    hook: true,
+    openid: null,
+    userid: null
+  },
   onLaunch: function () {
     // 展示本地存储能力
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
-    // 登录
+    //2.获得用户的UnionID并核验
     wx.login({
-      success: res => {
-        // 发送 res.code 到后台换取 openId, sessionKey, unionId
+      success: (res) => {
+        if (res.code) {
+          wx.request({
+            url: 'http://127.0.0.1:5000/api/wxlogin/',
+            method: 'POST',
+            data: {
+              'js_code': res.code
+            },
+            header: {
+              'content-type': 'application/x-www-form-urlencoded'
+            },
+            method: 'POST',
+            success: (res2) => {
+              //var data = JSON.parse(res2.data);
+              var data = res2.data
+              if (data.status == 'success') {
+                this.globalData.userid = data.userid
+                /*if (this.useridReadyCallBack) {
+                  this.useridReadyCallback(data)
+                }*/
+              } else if (data.status == 'hook') {
+                this.hook = false
+                this.openid = data.openid
+                /*if (this.useridReadyCallBack) {
+                  this.useridReadyCallback(data)
+                }*/
+              }
+            },
+          });
+        } else {
+          console.log('登陆失败！' + res.errMsg)
+        }
       }
     })
     // 获取用户信息
@@ -21,7 +59,6 @@ App({
             success: res => {
               // 可以将 res 发送给后台解码出 unionId
               this.globalData.userInfo = res.userInfo
-
               // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
               // 所以此处加入 callback 以防止这种情况
               if (this.userInfoReadyCallback) {
@@ -33,7 +70,4 @@ App({
       }
     })
   },
-  globalData: {
-    userInfo: null
-  }
 })
