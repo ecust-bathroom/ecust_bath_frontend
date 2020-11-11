@@ -32,7 +32,7 @@ App({
               //var data = JSON.parse(res2.data);
               var data = res2.data
               if (data.status == 'success') {
-                this.globalData.userid = data.userid
+                this.globalData.userData = data.userData
                 /*if (this.useridReadyCallBack) {
                   this.useridReadyCallback(data)
                 }*/

@@ -1,4 +1,8 @@
 /**index.wxss**/
+.container {
+  width: 750rpx
+}
+
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -10,6 +14,8 @@
   height: 128rpx;
   margin: 20rpx;
   border-radius: 50%;
+  float: left;
+  /*position: fixed;*/
 }
 
 .userinfo-nickname {
@@ -20,42 +26,45 @@
   margin-top: 200px;
 }
 
-.empty{
+.status {
+  height: 70rpx;
+  width:120rpx;
+  margin: 0 auto;
+  float: right;
+  border-radius:35rpx ;
+}
+
+.status text {
+  font-size:40rpx;
+  color: white;
+  text-align:center
+}
+
+.available {
   background-color: green;
-  color:white;
-  border-radius: 5px;
-  float: right;
 }
 
-.using{
+.full {
   background-color: red;
-  color:white;
-  border-radius: 5px;
-  float: right;
-}
-.fixing{
-  background-color: gray;
-  color:white;
-  border-radius: 5px;
-  float: right;
-}
-.my-appointed{
-  background-color: blue;
-  color:white;
-  border-radius: 5px;
-  float: right;
-}
-.appointed{
-  background-color: yellow;
-  color:white;
-  border-radius: 5px;
-  float: right;
-}
-.bathroom{
-  padding:30px 20px;
-  margin:5px;
-  border-color: black;
-  border:3rpx solid #0000aa;
-  border-radius:5px
 }
 
+.appointment-block button {
+  width: 500rpx;
+  height: 100rpx;
+  border-radius: 50rpx;
+  background-color: rgb(160, 141, 255);
+  color: white;
+  padding: 25rpx
+}
+
+.bathroom-block {
+  margin: 10rpx;
+  border: 2rpx solid;
+  border-radius: 75rpx;
+  width: 500rpx;
+  height:100rpx;
+  padding: 25rpx;
+}
+.bathroom-block text{
+padding:15rpx
+}

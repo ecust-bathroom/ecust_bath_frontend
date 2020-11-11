@@ -7,49 +7,34 @@
     <modal-input showcon="{{!hook}}" type="prompt" title="请绑定学号" formItems="{{items}}" showCancel="true"
       cancelText="暂不绑定" confirmText="绑定" bind:complete="hook"></modal-input>
   </view>
-  <view>
-    <view class="conblock" wx:if="{{canShow}}">
-      <view class="userinfo">
-        <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称
-        </button>
-        <block wx:else>
-          <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
-          <text class="userinfo-nickname">{{userInfo.nickName}}</text>
-        </block>
-      </view>
+  <view class="user-block" wx:if="{{canShow}}">
+    <view class="userinfo">
+      <button wx:if="{{!hasUserInfo && canIUse}}" open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取头像昵称
+      </button>
+      <block wx:else>
+        <image bindtap="bindViewTap" class="userinfo-avatar" src="{{userInfo.avatarUrl}}" mode="cover"></image>
+        <text class="userinfo-nickname">{{userInfo.nickName}}</text>
+      </block>
       <text>学号：{{userData.userid}} {{userData.name}}</text>
       <text>宿舍{{userData.dormid}}楼</text>
-      <text>{{dormData.now}}/{{dormData.total}}</text>
-      <view class="myappointment">
-        <view wx:if="{{appointed}}">
-          <text>当前预约：{{userData.bathid}}</text>
-          <text>预约时间：{{userData.starttime}} To {{userData.endtime}}</text>
-          <button bindtap="cancel">取消预约</button>
-        </view>
-        <view wx:if="{{!appointed}}">
-          <text>您当前还未预约。</text>
-        </view>
-      </view>
-
-      <view class="bathroomblock" wx:for="{{dormData.bathroom}}" wx:for-item="room">
-        <view class="bathroom" bindtap="appoint" data-num="{{room.bathid}}">
-          <text>{{room.bathid}}号浴室</text>
-          <text class="using" wx:if="{{room.con=='using'}}">正在使用</text>
-          <text class="empty" wx:if="{{room.con=='empty'}}">可用</text>
-          <text></text>
-          <text class="appointed" wx:if="{{room.con=='appointed'}}">已被预约</text>
-          <text class="fixing" wx:if="{{room.con=='fixing'}}">维修</text>
-          <text class="my-appointed" wx:if="{{appointment.appointed && room.bathid==userData.bathid}}">已预约</text>
-        </view>
-      </view>
+    </view>
+  </view>
+  <view class="appointment-block">
+    <view wx:if="{{appointed}}">
+      <button bindtap="cancel">取消预约</button>
+    </view>
+    <view wx:if="{{!appointed}}">
+      <button bindtap="appoint">预约</button>
     </view>
   </view>
   <view>
-    <picker class="time-picker" mode="time" start="{{bootTime}}" end="23:00" value="{{userData.starttime}}"
-      bindchange="starttimeChange">ni</picker>
-    <text>{{appointment.starttime}}</text>
-    <picker class="time-picker" mode="time" start="{{bootTime}}" end="23:00" value="{{userData.endtime}}"
-      bindchange="endtimeChange">ni</picker>
-    <text>{{appointment.endtime}}</text>
+    <view class="bathroom-block" wx:for="{{dormData.bathroom}}" wx:for-item="bathroom" wx:key="bathid">
+      <text>{{userData.dormid}}-{{bathroom.bathid}}</text>
+      <text>{{bathroom.now}}/{{bathroom.capacity}}</text>
+      <view class="status">
+      <text class="available" wx-if="{{bathroom.now<bathroom.capacity}}">可用</text>
+      <text class="full" wx-if="{{bathroom.now>=bathroom.capacity}}">满员</text>
+    </view>
+    </view>
   </view>
 </view>

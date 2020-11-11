@@ -1,9 +1,6 @@
 //index.js
 //获取应用实例
 let app = getApp()
-var util = require('../../utils/util.js')
-//var p = require('../../utils/wx-promise-pro.js')
-//p.promisifyAll()
 Page({
   data: {
     hook: true,
@@ -12,19 +9,9 @@ Page({
       name: null,
       userid: null,
       dormid: null,
+      appointed: null
     },
-    appointment: {
-      appointed: null,
-      bathid: null,
-      starttime: null,
-      endtime: null
-    },
-    dormData: {
-      bathroom: null,
-      dormid: null,
-      now: null,
-      total: null
-    },
+    dormdata: {},
     items: [{
       label: '请输入学号',
       name: 'userid',
@@ -40,12 +27,6 @@ Page({
     })
   },
   onLoad: function () {
-    //1.设置picker时间为当前时间
-    var mytime = new Date();
-    var time = String(mytime.getHours()) + ":" + String(mytime.getMinutes());
-    this.setData({
-      bootTime: time
-    });
     //2.同步全局变量
     /*
     if (app.globalData.userid) {
@@ -85,13 +66,17 @@ Page({
       title: '加载中',
     })
     setTimeout(() => {
-      this.setUserStatus(app.globalData.userid)
+      this.setData({
+        userData: app.globalData.userData
+      })
       setTimeout(() => {
         this.setDormStatus(this.data.userData.dormid)
-        wx.hideLoading()
-        this.setData({
-          canShow: true
-        })
+        setTimeout(() => {
+          wx.hideLoading()
+          this.setData({
+            canShow: true
+          })
+        }, 1000)
       }, 1000)
     }, 1000) //这里上面让优化的时候再优化
   },
@@ -105,7 +90,7 @@ Page({
   },
   onPullDownRefresh: function () {
     setTimeout(() => {
-      this.setUserStatus(this.data.userData.userid);
+      //this.setUserStatus(this.data.userData.userid);
       this.setDormStatus(this.data.userData.dormid);
       wx.showToast({
         title: '刷新成功',
@@ -125,10 +110,9 @@ Page({
           userid: e.detail.formData['userid'],
           openid: this.data['openid']
         },
-        dataType: JSON,
         method: "POST",
         header: {
-          'content-type': 'application/json'
+          'content-type': 'application/x-www-form-urlencoded'
         },
         success: (res) => {
           var data = res.data
@@ -179,28 +163,28 @@ Page({
       data: {
         'dormid': dormid
       },
-      method: "POST",
+      method: 'POST',
       header: {
         'content-type': 'application/x-www-form-urlencoded'
       },
       success: (res) => {
         var data = res.data
-        // var data = JSON.parse(res.data)
+        //var data = JSON.parse(res.data)
         if (data.status == 'success') {
-          console.log('获取浴室信息成功！')
+          console.log('获取宿舍信息成功！')
           this.setData({
             dormData: data.dormData
           })
         } else if (data.status == 'fail') {
-          console.log('获取浴室信息失败！')
+          console.log('获取宿舍信息失败！')
         }
-      },
+      }
     })
   },
-  appoint: function (event) {
+  appoint: function () {
     wx.showModal({
-      title:'提示',
-      content:'确认预约吗？',
+      title: '提示',
+      content: '确认预约吗？',
       cancelColor: 'cancelColor',
       success: (res) => {
         if (!res.confirm) {
@@ -212,9 +196,6 @@ Page({
       url: 'http://127.0.0.1:5000/api/appoint/',
       data: {
         userid: this.data.userData.userid,
-        bathid: event.currentTarget.dataset.num,
-        starttime: this.data.appointment.starttime,
-        endtime: this.data.appointment.endtime
       },
       method: "POST",
       header: {
@@ -224,13 +205,7 @@ Page({
         var data = res.data
         //var data = JSON.parse(res.data)
         if (data.status == 'success') {
-          this.setData({
-            //todo change
-            appointed: true,
-            bathid: event.currentTarget.dataset.num,
-            starttime: this.data.appointment.starttime,
-            endtime: this.data.appointment.endtime
-          });
+          this.setUserStatus()
           wx.showModal({
             cancelColor: 'cancelColor',
             title: '预约成功！',
@@ -239,12 +214,7 @@ Page({
           this.netError()
         }
       },
-      fail() {
-        wx.showToast({
-          title: '网络可能存在问题，请重新尝试！',
-          icon: 'fail',
-        })
-      },
+      fail: this.netError
     })
   },
   cancel: function () {
@@ -252,7 +222,6 @@ Page({
       url: 'http://127.0.0.1:5000/api/cancel',
       data: {
         userid: this.data.userData.userid,
-        bathid: this.data.userData.bathid
       },
       dataType: JSON,
       header: {
@@ -260,30 +229,21 @@ Page({
       },
       success(res) {
         var data = res.data
-        //        var data = JSON.parse(res.data)
+        //var data = JSON.parse(res.data)
         if (data.status == 'success') {
-          this.setData({
-            appointed: false,
-            bathid: 0,
-            starttime: 0,
-            endtime: 0
-          });
-          wx.showToast({
+          this.setUserStatus()
+          wx.showModal({
             title: '取消成功！',
             icon: 'success',
           })
         } else if (data.status == 'fail') {
-          wx.showToast({
-            title: '网络可能存在问题，请重新尝试！',
-            icon: 'fail',
-          })
+          this.netError
         }
       },
-      fail() {
-        this.netError()
-      }
+      fail: this.netError
     })
   },
+  /*
   starttimeChange: function (e) {
     var d = this.data.appointment;
     d.starttime = e.detail.value;
@@ -297,7 +257,7 @@ Page({
     this.setData({
       appointment: d
     })
-  },
+  },*/
   netError: function () {
     wx.showModal({
       title: '网络可能存在问题，请重新尝试！',
