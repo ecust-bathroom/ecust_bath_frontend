@@ -1,4 +1,6 @@
 /**index.wxss**/
+@import '/miniprogram_npm/weui-miniprogram/weui-wxss/dist/style/weui.wxss';
+
 .container {
   width: 750rpx
 }
@@ -27,20 +29,16 @@
 }
 
 .status {
-  height: 70rpx;
-  width:120rpx;
-  margin: 0 auto;
-  float: right;
-  border-radius:35rpx ;
-}
-
-.status text {
-  font-size:40rpx;
+  font-size: 40rpx;
   color: white;
-  text-align:center
+  text-align: center;
+  float: right;
+  border: 2rpx solid;
+  border-radius: 5rpx
 }
 
 .available {
+
   background-color: green;
 }
 
@@ -48,23 +46,20 @@
   background-color: red;
 }
 
-.appointment-block button {
-  width: 500rpx;
-  height: 100rpx;
-  border-radius: 50rpx;
-  background-color: rgb(160, 141, 255);
-  color: white;
-  padding: 25rpx
+.yours{
+  background-color: blue;
 }
+
 
 .bathroom-block {
   margin: 10rpx;
   border: 2rpx solid;
-  border-radius: 75rpx;
+  border-radius: 10rpx;
   width: 500rpx;
-  height:100rpx;
+  height: 100rpx;
   padding: 25rpx;
 }
-.bathroom-block text{
-padding:15rpx
+
+.bathroom-block text {
+  padding: 15rpx
 }

@@ -32,13 +32,13 @@ App({
               //var data = JSON.parse(res2.data);
               var data = res2.data
               if (data.status == 'success') {
-                this.globalData.userData = data.userData
+                this.globalData.userData=data.userData
                 /*if (this.useridReadyCallBack) {
                   this.useridReadyCallback(data)
                 }*/
               } else if (data.status == 'hook') {
-                this.hook = false
-                this.openid = data.openid
+                this.globalData.hook = false
+                this.globalData.openid = data.openid
                 /*if (this.useridReadyCallBack) {
                   this.useridReadyCallback(data)
                 }*/

@@ -9,16 +9,15 @@ Page({
       name: null,
       userid: null,
       dormid: null,
-      appointed: null
     },
-    dormdata: {},
     items: [{
       label: '请输入学号',
       name: 'userid',
     }],
+    bathData: null,
     userInfo: {},
     hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo')
+    canIUse: wx.canIUse('button.open-type.getUserInfo'),
   },
   //事件处理函数
   bindViewTap: function () {
@@ -66,17 +65,16 @@ Page({
       title: '加载中',
     })
     setTimeout(() => {
+      this.getBathStatus()
       this.setData({
+        hook: app.globalData.hook,
         userData: app.globalData.userData
       })
       setTimeout(() => {
-        this.setDormStatus(this.data.userData.dormid)
-        setTimeout(() => {
-          wx.hideLoading()
-          this.setData({
-            canShow: true
-          })
-        }, 1000)
+        wx.hideLoading()
+        this.setData({
+          canShow: true
+        })
       }, 1000)
     }, 1000) //这里上面让优化的时候再优化
   },
@@ -90,112 +88,17 @@ Page({
   },
   onPullDownRefresh: function () {
     setTimeout(() => {
-      //this.setUserStatus(this.data.userData.userid);
-      this.setDormStatus(this.data.userData.dormid);
       wx.showToast({
         title: '刷新成功',
       })
     }, 1000)
   },
-  hook: function (e) {
-    if (e.detail.confirm) {
-      var userData = this.data.userData;
-      userData['userid'] = e.detail.formData['userid']
-      this.setData({
-        userData: userData
-      })
-      wx.request({
-        url: 'http://127.0.0.1:5000/api/hook/',
-        data: {
-          userid: e.detail.formData['userid'],
-          openid: this.data['openid']
-        },
-        method: "POST",
-        header: {
-          'content-type': 'application/x-www-form-urlencoded'
-        },
-        success: (res) => {
-          var data = res.data
-          //var data = JSON.parse(res.data)
-          if (data.status == 'success') {
-            wx.showModal({
-              cancelColor: 'cancelColor',
-              content: '绑定成功'
-            })
-          }
-        }
-      })
-    } else {
-      wx.showModal({
-        cancelColor: 'cancelColor',
-        title: '提示',
-        content: '如果不绑定，将无法体验快捷的服务。'
-      })
-    }
-  },
-  setUserStatus: function (userid) {
+  hook: function () {
     wx.request({
-      url: 'http://127.0.0.1:5000/api/getUserStatus/',
+      url: 'http://127.0.0.1:5000/api/hook/',
       data: {
-        'userid': userid
-      },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
-        var data = res.data
-        //var data = JSON.parse(res.data)
-        if (data.status == 'success') {
-          console.log('获取用户信息成功！')
-          this.setData({
-            userData: data.userData
-          })
-        } else if (data.status == 'fail') {
-          console.log('获取用户信息失败！')
-        }
-      }
-    })
-  },
-  setDormStatus: function (dormid) {
-    wx.request({
-      url: 'http://127.0.0.1:5000/api/getDormStatus/',
-      data: {
-        'dormid': dormid
-      },
-      method: 'POST',
-      header: {
-        'content-type': 'application/x-www-form-urlencoded'
-      },
-      success: (res) => {
-        var data = res.data
-        //var data = JSON.parse(res.data)
-        if (data.status == 'success') {
-          console.log('获取宿舍信息成功！')
-          this.setData({
-            dormData: data.dormData
-          })
-        } else if (data.status == 'fail') {
-          console.log('获取宿舍信息失败！')
-        }
-      }
-    })
-  },
-  appoint: function () {
-    wx.showModal({
-      title: '提示',
-      content: '确认预约吗？',
-      cancelColor: 'cancelColor',
-      success: (res) => {
-        if (!res.confirm) {
-          return
-        }
-      }
-    })
-    wx.request({
-      url: 'http://127.0.0.1:5000/api/appoint/',
-      data: {
-        userid: this.data.userData.userid,
+        userid: this.data.userid,
+        openid: app.globalData.openid
       },
       method: "POST",
       header: {
@@ -205,63 +108,39 @@ Page({
         var data = res.data
         //var data = JSON.parse(res.data)
         if (data.status == 'success') {
-          this.setUserStatus()
           wx.showModal({
             cancelColor: 'cancelColor',
-            title: '预约成功！',
+            content: '绑定成功'
           })
-        } else if (data.status == 'fail') {
-          this.netError()
+          this.setData({
+            hook: true,
+            userData:data.userData
+          })
         }
-      },
-      fail: this.netError
+      }
     })
   },
-  cancel: function () {
+  getBathStatus: function () {
     wx.request({
-      url: 'http://127.0.0.1:5000/api/cancel',
-      data: {
-        userid: this.data.userData.userid,
-      },
-      dataType: JSON,
+      url: 'http://127.0.0.1:5000/api/getBathStatus',
+      method: "POST",
       header: {
-        'content-type': 'application/json'
+        'content-type': 'application/x-www-form-urlencoded'
       },
-      success(res) {
+      success: (res) => {
         var data = res.data
-        //var data = JSON.parse(res.data)
-        if (data.status == 'success') {
-          this.setUserStatus()
-          wx.showModal({
-            title: '取消成功！',
-            icon: 'success',
-          })
-        } else if (data.status == 'fail') {
-          this.netError
-        }
-      },
-      fail: this.netError
+        this.setData({
+          bathData: data.bathData
+        })
+      }
     })
   },
-  /*
-  starttimeChange: function (e) {
-    var d = this.data.appointment;
-    d.starttime = e.detail.value;
+  useridInput: function (e) {
     this.setData({
-      appointment: d
+      userid: e.detail.value
     })
   },
-  endtimeChange: function (e) {
-    var d = this.data.appointment;
-    d.endtime = e.detail.value;
-    this.setData({
-      appointment: d
-    })
-  },*/
   netError: function () {
-    wx.showModal({
-      title: '网络可能存在问题，请重新尝试！',
-      cancelColor: 'green',
-    })
+    console.log('网络不通')
   }
 })
