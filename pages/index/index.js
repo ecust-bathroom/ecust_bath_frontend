@@ -88,6 +88,7 @@ Page({
   },
   onPullDownRefresh: function () {
     setTimeout(() => {
+      this.getBathStatus()
       wx.showToast({
         title: '刷新成功',
       })
@@ -123,7 +124,7 @@ Page({
   getBathStatus: function () {
     wx.request({
       url: 'http://127.0.0.1:5000/api/getBathStatus',
-      method: "POST",
+      method: "GET",
       header: {
         'content-type': 'application/x-www-form-urlencoded'
       },

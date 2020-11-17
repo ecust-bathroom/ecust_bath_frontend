@@ -38,7 +38,6 @@
 }
 
 .available {
-
   background-color: green;
 }
 
@@ -52,14 +51,19 @@
 
 
 .bathroom-block {
+  display:flex;
+  flex-direction: column;
+  
+}
+
+.bathroom-block text {
+  padding: 15rpx
+}
+.bathroom{
   margin: 10rpx;
   border: 2rpx solid;
   border-radius: 10rpx;
   width: 500rpx;
   height: 100rpx;
   padding: 25rpx;
-}
-
-.bathroom-block text {
-  padding: 15rpx
 }

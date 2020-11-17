@@ -31,8 +31,9 @@
       </block>
     </view>
   </view>
-  <view>
-    <view class="bathroom-block" wx:for="{{bathData}}" wx:for-item="bathroom" wx:key="">
+  <view class="bathroom-block">
+    <view class="bathroom" wx:for="{{bathData}}" wx:for-item="bathroom" wx:key=""
+      style="order:{{bathroom.dormid==userData.dormid?-1:0}}">
       <text>{{bathroom.dormid}}-{{bathroom.bathid}}</text>
       <text>{{bathroom.use}}/{{bathroom.capacity}}</text>
       <view class="status yours" wx-if="{{bathroom.dormid==userData.dormid}}">
