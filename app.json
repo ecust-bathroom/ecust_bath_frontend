@@ -1,13 +1,36 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/logs/logs"
+    "pages/logs/logs",
+    "pages/userinfo/userinfo"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "Weixin",
     "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "color": "#ffffff", 
+    "selectedColor": "#ffffff",  
+    "backgroundColor": "#8fbc8f",  
+    "borderStyle": "black",  
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "查询",         
+        "iconPath": "miniprogram_npm/weui-miniprogram/static/icon/s-arrow-back.png",
+        "selectedIconPath": "miniprogram_npm/weui-miniprogram/static/icon/s-arrow-back.png" 
+      },
+      {
+        "pagePath": "pages/userinfo/userinfo",
+        "text": "我",         
+        "iconPath": "miniprogram_npm/weui-miniprogram/static/icon/s-arrow-back.png",
+        "selectedIconPath": "miniprogram_npm/weui-miniprogram/static/icon/s-arrow-back.png" 
+      }
+    ],
+    "position": "bottom",  
+    "custom": false  
   },
   "style": "v2",
   "sitemapLocation": "sitemap.json"

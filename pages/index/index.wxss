@@ -1,10 +1,16 @@
 /**index.wxss**/
 @import '/miniprogram_npm/weui-miniprogram/weui-wxss/dist/style/weui.wxss';
 
+page{
+  background-color:deepskyblue
+}
 .container {
   width: 750rpx
 }
-
+text{
+  color:white;
+  /*font-family: STKaiti;*/
+}
 .userinfo {
   display: flex;
   flex-direction: column;
@@ -33,8 +39,8 @@
   color: white;
   text-align: center;
   float: right;
-  border: 2rpx solid;
-  border-radius: 5rpx
+  border: 1rpx solid;
+  border-radius: 20rpx
 }
 
 .available {
@@ -57,12 +63,14 @@
 }
 
 .bathroom-block text {
-  padding: 15rpx
+  padding: 15rpx;
+  color:white
 }
 .bathroom{
+  background-image: linear-gradient(to bottom right , #7A88FF, #7AFFAF);
   margin: 10rpx;
-  border: 2rpx solid;
-  border-radius: 10rpx;
+  border: 2rpx white solid;
+  border-radius: 50rpx;
   width: 500rpx;
   height: 100rpx;
   padding: 25rpx;

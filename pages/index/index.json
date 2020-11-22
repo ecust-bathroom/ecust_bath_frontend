@@ -1,5 +1,6 @@
 {
   "usingComponents": {
+    "mp-tabbar": "/miniprogram_npm/weui-miniprogram/tabbar/tabbar",
     "mp-dialog": "/miniprogram_npm/weui-miniprogram/dialog/dialog",
     "mp-cells": "/miniprogram_npm/weui-miniprogram/cells/cells",
     "mp-cell": "/miniprogram_npm/weui-miniprogram/cell/cell",
@@ -9,5 +10,6 @@
     "mp-form": "/miniprogram_npm/weui-miniprogram/form/form"
   },
   "enablePullDownRefresh": true,
-  "backgroundTextStyle": "dark"
+  "backgroundTextStyle": "dark",
+  "navigationBarTitleText": "浴室监控系统"
 }
