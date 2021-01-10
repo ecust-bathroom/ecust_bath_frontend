@@ -1,16 +1,5 @@
 <!--index.wxml-->
-<view class="container">
-  <view class="user-block" wx:if="{{canShow}}">
-    <view class="userinfo">
-      <block wx:if="{{hook}}">
-        <text>学号：{{userData.userid}} {{userData.name}}</text>
-        <text>宿舍{{userData.dormid}}楼</text>
-      </block>
-      <block wx:else>]
-        <text>请到“我”页面进行学号绑定！</text>
-      </block>
-    </view>
-  </view>
+<!--view class="container">
   <view class="bathroom-block">
     <view class="bathroom" wx:for="{{bathData}}" wx:for-item="bathroom" wx:key=""
       style="order:{{bathroom.dormid==userData.dormid?-1:0}}">
@@ -25,6 +14,15 @@
       <view class="status full" wx-if="{{bathroom.use>=bathroom.capacity}}">
         <text>满员</text>
       </view>
+    </view>
+  </view>
+</view-->
+<view class="container">
+  <view class="bathroom" wx:for="{{bathData.bathrooms}}" wx:for-item="bathroom">
+    <!--text>{{bathroom.bathroomId}}</text-->
+    <view class="singleroom" wx:for="{{bathroom.status}}" wx:for-item="singleroom">
+      <view class="yes" wx:if="{{singleroom}}"></view>
+      <view class="no" wx:else></view>
     </view>
   </view>
 </view>

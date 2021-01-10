@@ -3,21 +3,18 @@
 let app = getApp()
 Page({
   data: {
-    hook: true,
-    canShow: false,
-    userData: {
-      name: null,
-      userid: null,
-      dormid: null,
+    bathData: {
+      bathrooms: [{
+        bathroomId: 1,
+        status: [0,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
+      }, {
+        bathroomId: 2,
+        status:[1,0,0,0,0,1,0,0,0,0]
+      }, {
+        bathroomId: 3,
+        status: [1,0,1,1,1,0,1,1,0,0]
+      }]
     },
-    items: [{
-      label: '请输入学号',
-      name: 'userid',
-    }],
-    bathData: null,
-    userInfo: {},
-    hasUserInfo: false,
-    canIUse: wx.canIUse('button.open-type.getUserInfo'),
   },
   //事件处理函数
   bindViewTap: function () {
@@ -26,21 +23,9 @@ Page({
     })
   },
   onLoad: function () {
-    wx.showLoading({
-      title: '加载中',
-    })
+    //wx.showLoading({title: '加载中',})
     setTimeout(() => {
-      this.getBathStatus()
-      this.setData({
-        hook: app.globalData.hook,
-        userData: app.globalData.userData
-      })
-      setTimeout(() => {
-        wx.hideLoading()
-        this.setData({
-          canShow: true
-        })
-      }, 1000)
+      //this.getBathStatus()
     }, 1000) //这里上面让优化的时候再优化
   },
   getUserInfo: function (e) {
@@ -59,7 +44,7 @@ Page({
       })
     }, 1000)
   },
-  
+
   getBathStatus: function () {
     wx.request({
       url: 'http://127.0.0.1:5000/api/getBathStatus',
@@ -74,18 +59,6 @@ Page({
         })
       }
     })
-  },
-  useridInput: function (e) {
-    this.setData({
-      userid: e.detail.value
-    })
-  },
-  tabChange:function(e){
-    if(e.detail.index==1){
-      wx.switchTab({
-        url: '../../pages/userinfo/userinfo'
-      })
-    }
   },
   netError: function () {
     console.log('网络不通')

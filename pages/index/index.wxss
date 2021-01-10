@@ -1,77 +1,56 @@
 /**index.wxss**/
 @import '/miniprogram_npm/weui-miniprogram/weui-wxss/dist/style/weui.wxss';
 
-page{
-  background-color:deepskyblue
+page {
+  background-color: deepskyblue
 }
+
 .container {
   width: 750rpx
 }
-text{
-  color:white;
+
+text {
+  color: white;
   /*font-family: STKaiti;*/
 }
-.userinfo {
+
+.bathroom {
+  background-image: linear-gradient(to bottom right, #7A88FF, #7AFFAF);
   display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-  float: left;
-  /*position: fixed;*/
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 200px;
-}
-
-.status {
-  font-size: 40rpx;
-  color: white;
-  text-align: center;
-  float: right;
-  border: 1rpx solid;
-  border-radius: 20rpx
-}
-
-.available {
-  background-color: green;
-}
-
-.full {
-  background-color: red;
-}
-
-.yours{
-  background-color: blue;
-}
-
-
-.bathroom-block {
-  display:flex;
-  flex-direction: column;
-  
-}
-
-.bathroom-block text {
-  padding: 15rpx;
-  color:white
-}
-.bathroom{
-  background-image: linear-gradient(to bottom right , #7A88FF, #7AFFAF);
   margin: 10rpx;
   border: 2rpx white solid;
-  border-radius: 50rpx;
-  width: 500rpx;
+  border-radius: 30rpx;
+  width: 600rpx;
   height: 100rpx;
   padding: 25rpx;
+
+}
+.singleroom{
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+  align-content: flex-start;
+  vertical-align: middle;
+}
+.singleroom view {
+  display: flex;
+  width: 30rpx;
+  height: 30rpx;
+  
+  border: 1rpx solid white;
+  border-radius: 30%;
+  margin: 5rpx;
+}
+
+.yes {
+
+  background-color: white;
+
+}
+
+.no {
+
+  background-color: lightgray;
+
 }

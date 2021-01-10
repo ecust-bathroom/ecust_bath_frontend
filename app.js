@@ -4,9 +4,6 @@
 App({
   globalData: {
     userInfo: null,
-    hook: true,
-    openid: null,
-    userid: null
   },
   onLaunch: function () {
     // 展示本地存储能力
@@ -15,41 +12,7 @@ App({
     wx.setStorageSync('logs', logs)
 
     //2.获得用户的UnionID并核验
-    wx.login({
-      success: (res) => {
-        if (res.code) {
-          wx.request({
-            url: 'http://127.0.0.1:5000/api/wxlogin/',
-            method: 'POST',
-            data: {
-              'js_code': res.code
-            },
-            header: {
-              'content-type': 'application/x-www-form-urlencoded'
-            },
-            method: 'POST',
-            success: (res2) => {
-              //var data = JSON.parse(res2.data);
-              var data = res2.data
-              if (data.status == 'success') {
-                this.globalData.userData=data.userData
-                /*if (this.useridReadyCallBack) {
-                  this.useridReadyCallback(data)
-                }*/
-              } else if (data.status == 'hook') {
-                this.globalData.hook = false
-                this.globalData.openid = data.openid
-                /*if (this.useridReadyCallBack) {
-                  this.useridReadyCallback(data)
-                }*/
-              }
-            },
-          });
-        } else {
-          console.log('登陆失败！' + res.errMsg)
-        }
-      }
-    })
+    
     // 获取用户信息
     wx.getSetting({
       success: res => {
